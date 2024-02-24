@@ -1,0 +1,90 @@
+<div id="calendar-container">
+    <h2 id="current-year"></h2>
+    <h3 id="current-month"></h3>
+    <script>
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"];
+        document.getElementById('current-month').innerText = monthNames[new Date().getMonth()];
+    </script>
+    <script>
+        document.getElementById('current-year').innerText = new Date().getFullYear();
+    </script>
+    <button id="prev-month">Prev</button>
+    <button id="next-month">Next</button>
+    <div id="calendar"></div>
+</div>
+
+<script>
+    const calendarContainer = document.getElementById('calendar');
+    const prevMonthButton = document.getElementById('prev-month');
+    const nextMonthButton = document.getElementById('next-month');
+
+    let currentMonth = new Date();
+
+    const renderCalendar = (date) => {
+        const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+        const daysInMonth = lastDay.getDate();
+        const firstDayOfWeek = firstDay.getDay();
+
+        let calendarHTML = '<table><tr>';
+
+        // Days of week header
+        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        for (let day of daysOfWeek) {
+            calendarHTML += `<th>${day}</th>`;
+        }
+        calendarHTML += '</tr><tr>';
+
+        // Empty cells for days of previous month
+        for (let i = 0; i < firstDayOfWeek; i++) {
+            calendarHTML += '<td></td>';
+        }
+
+        // Days of current month
+        for (let i = 1; i <= daysInMonth; i++) {
+            if ((i + firstDayOfWeek - 1) % 7 === 0 && i > 1) {
+                calendarHTML += '</tr><tr>';
+            }
+            calendarHTML += `<td>${i}</td>`;
+        }
+
+        calendarHTML += '</tr></table>';
+
+        calendarContainer.innerHTML = calendarHTML;
+    };
+
+    const changeMonth = (offset) => {
+        currentMonth.setMonth(currentMonth.getMonth() + offset);
+        renderCalendar(currentMonth);
+        const currentMonthField = document.getElementById('current-month');
+        currentMonthField.textContent = `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}`;
+        const currentYearField = document.getElementById('current-year');
+        currentYearField.textContent = currentMonth.getFullYear();
+    };
+    const monthField = document.getElementById('month-field');
+
+    const updateMonthField = (date) => {
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        monthField.textContent = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+    };
+
+    // Update month field on calendar render
+    /*
+    const originalRenderCalendar = renderCalendar;
+    renderCalendar = (date) => {
+        originalRenderCalendar(date);
+        updateMonthField(date);
+    };
+    renderCalendar = originalRenderCalendar;
+    */
+
+    prevMonthButton.addEventListener('click', () => changeMonth(-1));
+    nextMonthButton.addEventListener('click', () => changeMonth(1));
+
+    // Initial render
+    renderCalendar(currentMonth);
+</script>

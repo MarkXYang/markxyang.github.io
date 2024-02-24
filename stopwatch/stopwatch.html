@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Stopwatch with Milliseconds</title>
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+  #stopwatch {
+    font-size: 48px;
+  }
+  button {
+    font-size: 20px;
+    margin: 10px;
+  }
+</style>
+</head>
+<body>
+<div id="stopwatch">00:00:00:000</div>
+<button id="startStop">Start</button>
+<button id="reset">Reset</button>
+
+<script>
+let startTime;
+let updatedTime;
+let difference;
+let tInterval;
+let running = 0;
+
+function startStop() {
+  if (!running) {
+    startTime = new Date().getTime();
+    tInterval = setInterval(getShowTime, 1);
+    document.getElementById('startStop').innerText = 'Stop';
+    running = 1;
+  } else {
+    clearInterval(tInterval);
+    document.getElementById('startStop').innerText = 'Start';
+    running = 0;
+  }
+}
+
+function reset() {
+  clearInterval(tInterval);
+  running = 0;
+  document.getElementById('stopwatch').innerText = '00:00:00:000';
+  document.getElementById('startStop').innerText = 'Start';
+}
+
+function getShowTime() {
+  updatedTime = new Date().getTime();
+  difference = updatedTime - startTime;
+  
+  let hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+  let seconds = Math.floor((difference % (1000 * 60)) / 1000);
+  let milliseconds = Math.floor((difference % 1000) / 10);
+  
+  hours = (hours < 10) ? "0" + hours : hours;
+  minutes = (minutes < 10) ? "0" + minutes : minutes;
+  seconds = (seconds < 10) ? "0" + seconds : seconds;
+  milliseconds = (milliseconds < 10) ? "00" + milliseconds : (milliseconds < 100) ? "0" + milliseconds : milliseconds;
+  
+  document.getElementById('stopwatch').innerText = hours + ':' + minutes + ':' + seconds + ':' + milliseconds;
+}
+
+document.getElementById('startStop').addEventListener('click', startStop);
+document.getElementById('reset').addEventListener('click', reset);
+</script>
+</body>
+</html>
+
