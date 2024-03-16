@@ -1,0 +1,3 @@
+[submodule "games/JSLines"]
+	path = games/JSLines
+	url = https://github.com/MarkXYang/JSLines.git
